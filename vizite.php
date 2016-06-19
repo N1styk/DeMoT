@@ -1,3 +1,105 @@
+
+<?php
+//initialize the session
+if (!isset($_SESSION)) {
+  session_start();
+}
+
+// ** Logout the current user. **
+$logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
+if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")){
+  $logoutAction .="&". htmlentities($_SERVER['QUERY_STRING']);
+}
+
+if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
+  //to fully log out a visitor we need to clear the session varialbles
+  $_SESSION['MM_Username'] = NULL;
+  $_SESSION['MM_UserGroup'] = NULL;
+  $_SESSION['PrevUrl'] = NULL;
+  unset($_SESSION['MM_Username']);
+  unset($_SESSION['MM_UserGroup']);
+  unset($_SESSION['PrevUrl']);
+	
+  $logoutGoTo = "login.php";
+  if ($logoutGoTo) {
+    header("Location: $logoutGoTo");
+    exit;
+  }
+}
+?>
+<?php
+if (!isset($_SESSION)) {
+  session_start();
+}
+$MM_authorizedUsers = "";
+$MM_donotCheckaccess = "true";
+
+// *** Restrict Access To Page: Grant or deny access to this page
+function isAuthorized($strUsers, $strGroups, $UserName, $UserGroup) { 
+  // For security, start by assuming the visitor is NOT authorized. 
+  $isValid = False; 
+
+  // When a visitor has logged into this site, the Session variable MM_Username set equal to their username. 
+  // Therefore, we know that a user is NOT logged in if that Session variable is blank. 
+  if (!empty($UserName)) { 
+    // Besides being logged in, you may restrict access to only certain users based on an ID established when they login. 
+    // Parse the strings into arrays. 
+    $arrUsers = Explode(",", $strUsers); 
+    $arrGroups = Explode(",", $strGroups); 
+    if (in_array($UserName, $arrUsers)) { 
+      $isValid = true; 
+    } 
+    // Or, you may restrict access to only certain users based on their username. 
+    if (in_array($UserGroup, $arrGroups)) { 
+      $isValid = true; 
+    } 
+    if (($strUsers == "") && true) { 
+      $isValid = true; 
+    } 
+  } 
+  return $isValid; 
+}
+
+$MM_restrictGoTo = "access_denied.php";
+if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers, $_SESSION['MM_Username'], $_SESSION['MM_UserGroup'])))) {   
+  $MM_qsChar = "?";
+  $MM_referrer = $_SERVER['PHP_SELF'];
+  if (strpos($MM_restrictGoTo, "?")) $MM_qsChar = "&";
+  if (isset($_SERVER['QUERY_STRING']) && strlen($_SERVER['QUERY_STRING']) > 0) 
+  $MM_referrer .= "?" . $_SERVER['QUERY_STRING'];
+  $MM_restrictGoTo = $MM_restrictGoTo. $MM_qsChar . "accesscheck=" . urlencode($MM_referrer);
+  header("Location: ". $MM_restrictGoTo); 
+  exit;
+}
+$ceva = $_SESSION['MM_Username'];
+
+$con1=mysql_connect("localhost","root","");
+                mysql_select_db("demotdb",$con1);
+				$qry1 = "SELECT id_utilizator FROM utilizatori WHERE utilizator like '$ceva'";
+
+                $result1=mysql_query($qry1,$con1);
+
+				while($row = mysql_fetch_array($result1))	
+                {
+			$id_util = $row[0];
+				}
+				
+				
+				                mysql_select_db("demotdb",$con1);
+				$qry1 = "SELECT id_cond FROM vizitator WHERE id_vizitator like '$id_util'";
+
+                $result1=mysql_query($qry1,$con1);
+
+				while($row = mysql_fetch_array($result1))	
+                {
+			$var2 = $row[0];
+				}
+				
+                mysql_close($con1);   
+				
+				
+
+?>
 <!DOCTYPE HTML>  
 <html>
 <head>
@@ -33,7 +135,7 @@
 		
 		<ul class = "nav navbar-nav navbar-right">
 		
-			<li> <a href="index.html">Home</a></li>
+			<li> <a href="index.php">Home</a></li>
 			<li> <a href = "#" class="dropdown-toggle" data-toggle="dropdown">Condamnati <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu">
 				<li><a href="condamnatpg1.php">Adauga Condamnat</a></li>
@@ -53,8 +155,48 @@
 
         
     <?php
-session_start();
 $var1 = $_SESSION['buton'];
+if($_SESSION['buton']==''){
+	$con1=mysql_connect("localhost","root","");
+                mysql_select_db("demotdb",$con1);
+				$qry1 = "SELECT imagini.imagine, condamnat.categoria_pedepsei, condamnat.nume_condamnat, condamnat.prenume_condamnat
+FROM condamnat
+inner join imagini on condamnat.id_img=imagini.id_imagine
+WHERE condamnat.id_condamnat like '$var2'";
+
+                $result1=mysql_query($qry1,$con1);
+				$numar=0;
+
+
+				while($row = mysql_fetch_array($result1))	
+                {
+					
+			echo '<div class="media">';
+  echo '<div class="media-left media-bottom">';
+    echo '<a href="#">';
+      echo '<img class="img-thumbnail" height="300" width="300" src="data:image;base64,'.$row[0].'">';
+    echo '</a>';
+  echo '</div>';
+  echo '<div class="media-left media-middle">';
+
+    echo '<h2>Numele condamnatului: '.$row[2].'</h2>';
+	echo '<h2>Prenumele condamnatului: '.$row[3].'</h2>';
+	echo '<h3>Categoria pedepsei: '.$row[1].'</h3>';
+    
+
+			
+			echo '</div>';
+			echo '</div>';
+			echo '<br>';
+			echo '<br>';
+			echo '<br>';
+			echo '<br>';
+			echo '<br>';
+			echo '<br>';
+			echo '<br>';
+                }
+}
+else{
                 $con1=mysql_connect("localhost","root","");
                 mysql_select_db("demotdb",$con1);
 				$qry1 = "SELECT imagini.imagine, condamnat.categoria_pedepsei, condamnat.nume_condamnat, condamnat.prenume_condamnat
@@ -93,7 +235,7 @@ WHERE condamnat.id_condamnat like '$var1'";
 			echo '<br>';
 			echo '<br>';
                 }
-
+}
                 mysql_close($con1);   
 
 ?>
@@ -115,20 +257,52 @@ th.tg-sort-header::-moz-selection { background:transparent; }th.tg-sort-header::
     <th class="tg-031e">Nume vizitator</th>
     <th class="tg-yw4l">Prenume vizitator</th>
     <th class="tg-yw4l">Relatia cu condamnatul</th>
-    <th class="tg-yw4l">Natura vizitei</th>
-    <th class="tg-yw4l">Data vizite</th>
-    <th class="tg-yw4l">Durata vizitei</th>
-    <th class="tg-yw4l">Obiecte furnizate</th>
-    <th class="tg-yw4l">Stare sanatate</th>
-    <th class="tg-yw4l">Nume martor</th>
+    <th class="tg-yw4l">Data vizitei</th>
+    <th class="tg-yw4l">Durata vizite(ore)</th>
+    <th class="tg-yw4l">Durata vizite(minute)</th>
+    <th class="tg-yw4l">Timpul inceperii</th>
+    <th class="tg-yw4l">Timpul finalizarii</th>
+    <th class="tg-yw4l">Stare condamnat</th>
   </tr>
   </thead>
 
 <?php
 
+if($_SESSION['buton']==''){$con=mysql_connect("localhost","root","");
+                mysql_select_db("demotdb",$con);
+				$qry = "SELECT vizitator.nume_vizitator, vizitator.prenume_vizitator, vizitator.relatie_condamnat, vizita.data_vizitei, vizita.durata_minute, vizita.durata_ore, vizita.ora_start, vizita.ora_final, vizita.stare_sanatate
+FROM condamnat
+INNER JOIN vizita ON condamnat.id_condamnat=vizita.id_condamnat
+inner join imagini on condamnat.id_img=imagini.id_imagine
+inner join vizitator on vizita.id_vizitator=vizitator.id_vizitator
+WHERE condamnat.id_condamnat like '$var2'";
+
+                $result=mysql_query($qry,$con);
+				$numar=0;
+
+
+				while($row = mysql_fetch_array($result))	
+                {
+					echo'<tbody>';
+					echo'<tr>';
+					echo '<th class="tg-031e">'.$row[0].'</th>';
+					echo '<th class="tg-031e">'.$row[1].'</th>';
+					echo '<th class="tg-031e">'.$row[2].'</th>';
+					echo '<th class="tg-031e">'.$row[3].'</th>';
+					echo '<th class="tg-031e">'.$row[4].'</th>';
+					echo '<th class="tg-031e">'.$row[5].'</th>';
+					echo '<th class="tg-031e">'.$row[6].'</th>';
+					echo '<th class="tg-031e">'.$row[7].'</th>';
+					echo '<th class="tg-031e">'.$row[8].'</th>';
+
+					echo'</tr>';
+					echo'</tbody>';
+                }
+				echo '</table></div>';}
+else{
                 $con=mysql_connect("localhost","root","");
                 mysql_select_db("demotdb",$con);
-				$qry = "SELECT vizitator.nume_vizitator, vizitator.prenume_vizitator, vizitator.relatie_condamnat, vizitator.natura_vizitei, vizita.data_vizitei, vizita.durata_vizitei, vizita.obiecte_furnizate, vizita.stare_sanatate, vizita.nume_martor
+				$qry = "SELECT vizitator.nume_vizitator, vizitator.prenume_vizitator, vizitator.relatie_condamnat, vizita.data_vizitei, vizita.durata_minute, vizita.durata_ore, vizita.ora_start, vizita.ora_final, vizita.stare_sanatate
 FROM condamnat
 INNER JOIN vizita ON condamnat.id_condamnat=vizita.id_condamnat
 inner join imagini on condamnat.id_img=imagini.id_imagine
@@ -157,7 +331,7 @@ WHERE condamnat.id_condamnat like '$var1'";
 					echo'</tbody>';
                 }
 				echo '</table></div>';
-				
+}		
                 mysql_close($con);   
 
 ?>

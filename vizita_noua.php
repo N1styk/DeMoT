@@ -1,3 +1,95 @@
+
+<?php
+//initialize the session
+if (!isset($_SESSION)) {
+  session_start();
+}
+
+// ** Logout the current user. **
+$logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
+if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")){
+  $logoutAction .="&". htmlentities($_SERVER['QUERY_STRING']);
+}
+
+if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
+  //to fully log out a visitor we need to clear the session varialbles
+  $_SESSION['MM_Username'] = NULL;
+  $_SESSION['MM_UserGroup'] = NULL;
+  $_SESSION['PrevUrl'] = NULL;
+  unset($_SESSION['MM_Username']);
+  unset($_SESSION['MM_UserGroup']);
+  unset($_SESSION['PrevUrl']);
+	
+  $logoutGoTo = "login.php";
+  if ($logoutGoTo) {
+    header("Location: $logoutGoTo");
+    exit;
+  }
+}
+?>
+<?php
+if (!isset($_SESSION)) {
+  session_start();
+}
+$MM_authorizedUsers = "";
+$MM_donotCheckaccess = "true";
+
+// *** Restrict Access To Page: Grant or deny access to this page
+function isAuthorized($strUsers, $strGroups, $UserName, $UserGroup) { 
+  // For security, start by assuming the visitor is NOT authorized. 
+  $isValid = False; 
+
+  // When a visitor has logged into this site, the Session variable MM_Username set equal to their username. 
+  // Therefore, we know that a user is NOT logged in if that Session variable is blank. 
+  if (!empty($UserName)) { 
+    // Besides being logged in, you may restrict access to only certain users based on an ID established when they login. 
+    // Parse the strings into arrays. 
+    $arrUsers = Explode(",", $strUsers); 
+    $arrGroups = Explode(",", $strGroups); 
+    if (in_array($UserName, $arrUsers)) { 
+      $isValid = true; 
+    } 
+    // Or, you may restrict access to only certain users based on their username. 
+    if (in_array($UserGroup, $arrGroups)) { 
+      $isValid = true; 
+    } 
+    if (($strUsers == "") && true) { 
+      $isValid = true; 
+    } 
+  } 
+  return $isValid; 
+}
+
+$MM_restrictGoTo = "access_denied.php";
+if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers, $_SESSION['MM_Username'], $_SESSION['MM_UserGroup'])))) {   
+  $MM_qsChar = "?";
+  $MM_referrer = $_SERVER['PHP_SELF'];
+  if (strpos($MM_restrictGoTo, "?")) $MM_qsChar = "&";
+  if (isset($_SERVER['QUERY_STRING']) && strlen($_SERVER['QUERY_STRING']) > 0) 
+  $MM_referrer .= "?" . $_SERVER['QUERY_STRING'];
+  $MM_restrictGoTo = $MM_restrictGoTo. $MM_qsChar . "accesscheck=" . urlencode($MM_referrer);
+  header("Location: ". $MM_restrictGoTo); 
+  exit;
+}
+$ceva = $_SESSION['MM_Username'];
+$con1=mysql_connect("localhost","root","");
+                mysql_select_db("demotdb",$con1);
+				$qry1 = "SELECT id_utilizator FROM utilizatori WHERE utilizator like '$ceva'";
+
+                $result1=mysql_query($qry1,$con1);
+				$numar=0;
+
+
+				while($row = mysql_fetch_array($result1))	
+                {
+			$altceva= $row[0];
+				}
+				
+                mysql_close($con1);  
+
+//echo $altceva;				
+?>
+
 <!DOCTYPE HTML>  
 <html>
 <head>
@@ -20,7 +112,7 @@
 		
 		<ul class = "nav navbar-nav navbar-right">
 		
-			<li> <a href="index.html">Home</a></li>
+			<li> <a href="index.php">Home</a></li>
 			<li> <a href = "#" class="dropdown-toggle" data-toggle="dropdown">Condamnati <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu">
 				<li><a href="condamnatpg1.php">Adauga Condamnat</a></li>
@@ -40,27 +132,53 @@
 	<div class="jumbotron container-fluid">
 	<center>
 <?php
+$var1 = $_SESSION['buton'];
   if(isset($_POST['submit']))
    {
     //Do all the submission part or storing in DB work and all here
     header('Location: condamnati.php');
    }
 // define variables and set to empty values
-$nume = $prenume = $relatie = $tip = "";
-$data = $durata = $obiecte = $stare = $martor = "";
-session_start();
+$stare = "";
+$durata_minute=$durata_ora=$data=0;
 
-$var1 = $_SESSION['buton'];
+$ceva = $_SESSION['MM_Username'];
+
+$con1=mysql_connect("localhost","root","");
+                mysql_select_db("demotdb",$con1);
+				$qry1 = "SELECT id_utilizator FROM utilizatori WHERE utilizator like '$ceva'";
+
+                $result1=mysql_query($qry1,$con1);
+
+				while($row = mysql_fetch_array($result1))	
+                {
+			$id_util = $row[0];
+				}
+				
+				
+				                mysql_select_db("demotdb",$con1);
+				$qry1 = "SELECT id_cond FROM vizitator WHERE id_vizitator like '$id_util'";
+
+                $result1=mysql_query($qry1,$con1);
+
+				while($row = mysql_fetch_array($result1))	
+                {
+			$var2 = $row[0];
+				}
+				
+                mysql_close($con1);   
+				
+if($_SESSION['buton']==''){
+	$var1=$var2;
+}
+else{
+	$var1 = $_SESSION['buton'];
+}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $nume = test_input($_POST["nume"]);
-  $prenume = test_input($_POST["prenume"]);
-  $relatie = test_input($_POST["relatie"]);
-  $tip = test_input($_POST["tip"]);
-  $data = test_input($_POST["data"]);
-  $durata = test_input($_POST["durata"]);
-  $obiecte = test_input($_POST["obiecte"]);
   $stare = test_input($_POST["stare"]);
-  $martor = test_input($_POST["martor"]);
+  $durata_minute = test_input($_POST["durata_minute"]);
+  $durata_ora = test_input($_POST["durata_ora"]);
+  $data = test_input($_POST["data"]);
 }
 
 function test_input($data) {
@@ -73,78 +191,38 @@ function test_input($data) {
 
 <br><br>
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">  
-<h1 class="display-4">Detalii vizitator</h1><br>
-<fieldset class="form-group">
-    <label for="exampleInputEmail1" class="col-sm-2 form-control-label">Nume</label>
-	<div class="col-sm-10">
-    <input type="text" class="form-control" name = "nume" placeholder="Numele vizitatorului">
-	</div>
- </fieldset>
- 
- <fieldset class="form-group">
-    <label for="exampleInputEmail1" class="col-sm-2 form-control-label">Prenume</label>
-	<div class="col-sm-10">
-    <input type="text" class="form-control" name = "prenume" placeholder="Prenumele vizitatorului">
-	</div>
- </fieldset> 
- 
- <fieldset class="form-group">
-    <label for="exampleInputEmail1" class="col-sm-2 form-control-label">Natura vizitei</label>
-	<div class="col-sm-10">
-    <input type="text" class="form-control" name = "tip" placeholder="Natura vizitei">
-	</div>
- </fieldset> 
- 
 
- 
-<fieldset class="form-group">
-    <label for="exampleSelect1" class="col-sm-2 form-control-label">Relatie</label>
-	<div class="col-sm-10">
-    <select class="form-control" name="relatie">
- <option value="ruda">Ruda</option>
-    <option value="tutore">Tutore</option>
-    <option value="avocat">Avocat</option>
-    <option value="prieten">Prieten</option>
-    </select>
-	</div>
-</fieldset>
-<br><br>
 <h1 class="display-4">Detalii vizita</h1><br>
 <fieldset class="form-group">
 <label for="exampleSelect1" class="col-sm-2 form-control-label">Data vizitei</label>
 <div class="col-sm-10">
-<input type="date"  class="form-control" name="data" max="2016-06-06" >
+<input type="date"  class="form-control" name="data" min="2016-06-06" max="2025-01-01" >
 </div>
  </fieldset>
  
  <fieldset class="form-group">
- <label for="exampleSelect1" class="col-sm-2 form-control-label">Durata vizitei</label>
+ <label for="exampleSelect1" class="col-sm-2 form-control-label">Durata vizitei(numarul de ore)</label>
 <div class="col-sm-10">
-    <input type="number" class="form-control" value="0" name="durata" >
+    <input type="number" class="form-control" value="0" name="durata_ora" min="0" max="23" >
+	</div>
+ </fieldset>
+
+ <fieldset class="form-group">
+ <label for="exampleSelect1" class="col-sm-2 form-control-label">Durata vizitei (numarul de minute)</label>
+<div class="col-sm-10">
+    <input type="number" class="form-control" value="0" name="durata_minute" min="0" max="59" >
 	</div>
  </fieldset>
  
  <fieldset class="form-group">
-    <label for="exampleInputEmail1" class="col-sm-2 form-control-label">Obiecte furnizate</label>
-	<div class="col-sm-10">
-    <input type="text" class="form-control" name = "obiecte" placeholder="Obiecte furnizate condamnatului">
-	</div>
- </fieldset> 
- 
- <fieldset class="form-group">
     <label for="exampleInputEmail1" class="col-sm-2 form-control-label">Stare condamnat</label>
 	<div class="col-sm-10">
-    <input type="text" class="form-control" name = "stare" placeholder="Starea condamnatului la momentul vizitei">
+    <input type="text" class="form-control" name = "stare" placeholder="Obiecte furnizate condamnatului">
 	</div>
  </fieldset> 
- 
- <fieldset class="form-group">
-    <label for="exampleInputEmail1" class="col-sm-2 form-control-label">Nume martor</label>
-	<div class="col-sm-10">
-    <input type="text" class="form-control" name = "martor" placeholder="Numele martorului care a asistat la intalnire">
-	</div>
- </fieldset> 
- 
+
+
+
   <input type="submit"  onclick=" return buttonClickd();" class="btn btn-primary btn-lg" name="submit" value="Submit">  
 </form>
 
@@ -162,27 +240,56 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 } 
 
-$id = uniqid();
-$id2 = uniqid();
-$sql = "INSERT INTO vizitator (id_vizitator, nume_vizitator, prenume_vizitator, relatie_condamnat,natura_vizitei) VALUES ('$id','$nume','$prenume','$relatie','$tip')";
-$sql2 = "INSERT INTO vizita (id_vizita, id_condamnat, id_vizitator, data_vizitei, durata_vizitei, obiecte_furnizate, stare_sanatate, nume_martor) VALUES
-('$id2',  '$var1', '$id', '$data', '$durata', '$obiecte', '$stare', '$martor')";
+$ore=$durata_ora;
+$minute=$durata_minute;
+$dbc = @mysqli_connect("localhost", "root", "", "demotdb");
 
-if($nume != '')
+$query = "SELECT curtime( ) as timestamp";
+$result = mysqli_query($dbc, $query) or die(mysqli_error());
+$row = mysqli_fetch_assoc($result);
+$ora_actuala=$row["timestamp"];
+
+ $con1=mysql_connect("localhost","root","");
+                mysql_select_db("demotdb",$con1);
+				$qry1 = "select max(ora_final) from vizita where data_vizitei='$data'";
+
+                $result1=mysql_query($qry1,$con1);
+				$numar=0;
+
+
+				while($row = mysql_fetch_array($result1))	
+                {
+					$ora_noua=$row[0];
+				}
+	
+		
+if($ora_actuala>$ora_noua){
+	
+	$ora_insert=$ora_actuala;
+	$query2 = "SELECT ADDTIME( curtime( ) , '".$ore.":".$minute.":00' ) as timestamp2";
+$result2 = mysqli_query($dbc, $query2) or die(mysqli_error());
+$row2 = mysqli_fetch_assoc($result2);
+$oraa=$row2["timestamp2"];
+}
+else {
+	
+	$ora_insert=$ora_noua;
+	$query2 = "SELECT ADDTIME( '".$ora_insert."', '".$ore.":".$minute.":00' ) as timestamp2";
+$result2 = mysqli_query($dbc, $query2) or die(mysqli_error());
+$row2 = mysqli_fetch_assoc($result2);
+$oraa=$row2["timestamp2"];
+}
+
+$id = uniqid();
+$sql = "INSERT INTO vizita (id_vizita, id_condamnat, id_vizitator, data_vizitei, durata_minute, durata_ore, stare_sanatate, ora_start,ora_final) VALUES
+('$id',  '$var1', '$altceva', '$data', '$durata_ora', '$durata_minute', '$stare','$ora_insert','$oraa')";
+
+if($stare !='')
 {
-IF (mysqli_query($conn, $sql)) {
+if (mysqli_query($conn, $sql)) { 
     echo "New record created successfully";
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
-}
-}
-
-if($obiecte != '')
-{
-IF (mysqli_query($conn, $sql2)) { 
-    echo "New record created successfully";
-} else {
-    echo "Error: " . $sql2 . "<br>" . $conn->error;
 }
 }
 $conn->close();

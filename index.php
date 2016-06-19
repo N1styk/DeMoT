@@ -71,7 +71,6 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers,
   header("Location: ". $MM_restrictGoTo); 
   exit;
 }
-
 $ceva = $_SESSION['MM_Username'];
 $con1=mysql_connect("localhost","root","");
                 mysql_select_db("demotdb",$con1);
@@ -83,12 +82,12 @@ $con1=mysql_connect("localhost","root","");
 
 				while($row = mysql_fetch_array($result1))	
                 {
-		//	echo $row[0];
+			//echo $row[0];
 				}
 				
                 mysql_close($con1);   
 ?>
-<!DOCTYPE HTML>  
+<!DOCTYPE HTML> 
 <html>
 <head>
     <title>Proiect Tehnologii Web</title>
@@ -97,153 +96,69 @@ $con1=mysql_connect("localhost","root","");
 	<link href = "css/styles.css" rel= "stylesheet">
 	<link href = "css/stil2.css" rel= "stylesheet">
 </head>
-<body>  
-<?php
-// define variables and set to empty values
-$nume = $prenume = $categorie = "";
-
-$id_img = $_SESSION['favcolor'];
-
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $nume = test_input($_POST["nume"]);
-  $prenume = test_input($_POST["prenume"]);
-  $categorie = test_input($_POST["categorie"]);
-}
-
-function test_input($data) {
-  $data = trim($data);
-  $data = stripslashes($data);
-  $data = htmlspecialchars($data);
-  return $data;
-}
-?>
-
-
+<body>
+<!-- Tipul navbar-->
 <div class = "navbar navbar-inverse navbar-static-top">	
 
 	<!-- Ce va contine bara-->
 	<div class = "container">
-		
+	
+	
+	  
+			
 			<!-- Brandul-->
 			<div class = "navbar-brand"> DeMoT </div> 
+	
+		
 		
 		<ul class = "nav navbar-nav navbar-right">
 		
-			<li> <a href="index.php">Home</a></li>
+			<li class = "active"> <a href="index.php">Home</a></li>
 			<li> <a href = "#" class="dropdown-toggle" data-toggle="dropdown">Condamnati <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu">
 				<li><a href="condamnatpg1.php">Adauga Condamnat</a></li>
 				<li><a href="condamnati.php">Lista Condamnati</a></li>                                          
 				</ul> </li>
 			<li><a href="statistici.php">Statistici</a></li>
-
+			<li><a href="<?php echo $logoutAction ?>">Logout</a></li>
 			
 		</ul>
 				
 	</div>		
 		
 </div>
-<div class = "container">
+	<div class = "container">
 	<div class="jumbotron">
-<center>
-<?php
-
-   if(isset($_POST['submit']))
-   {
-    //Do all the submission part or storing in DB work and all here
-    header('Location: condamnati.php');
-   }
-
-                $con=mysql_connect("localhost","root","");
-                mysql_select_db("demotdb",$con);
-				$qry = "SELECT imagine from imagini where id_imagine='$id_img'";
-                $result=mysql_query($qry,$con);
-				while($row = mysql_fetch_array($result))
-                {
-					echo '<img src="data:image;base64,'.$row[0].'" class="img-thumbnail" style="width:400px;height:400px;">';
-
-					}
-             
-?>
-
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">  
-
-<fieldset class="form-group">
-    <label for="exampleInputEmail1" class="col-sm-2 form-control-label">Nume</label>
-	<div class="col-sm-10">
-    <input type="text" class="form-control" name = "nume" placeholder="Numele condamnatului">
-	</div>
- </fieldset>
- 
- <fieldset class="form-group">
-    <label for="exampleInputEmail1" class="col-sm-2 form-control-label">Prenume</label>
-	<div class="col-sm-10">
-    <input type="text" class="form-control" name = "prenume" placeholder="Prenumele condamnatului">
-	</div>
- </fieldset>
-  <fieldset class="form-group">
-    <label for="exampleSelect1" class="col-sm-2 form-control-label">Categoria pedepsei</label>
-	<div class="col-sm-10">
-    <select class="form-control" name="categorie">
-     <option value="crima">Crima</option>
-    <option value="furt">Furt</option>
-    <option value="viol">Viol</option>
-    <option value="hartuire">Hartuire</option>
-    <option value="santaj">Santaj</option>
-    <option value="rapire">Rapire</option>
-    </select>
-	</div>
-  </fieldset>
-  <input type="submit"  onclick=" return buttonClickd();" name="submit"  class="btn btn-primary btn-lg" value="Submit">  
-</form>
-
-
-
-
-<?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "demotdb";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} 
-
-$id = uniqid();
-
-$sql = "INSERT INTO condamnat (id_condamnat, nume_condamnat, prenume_condamnat, categoria_pedepsei, id_img) VALUES ('$id','$nume','$prenume','$categorie','$id_img')";
-
-if($nume != '')
-{
-  IF (mysqli_query($conn, $sql)) {
-   echo "Great Job! You've entered it correctly!";
-   
-  } else {
-	  echo "ERROR";
-  }
-}
-
-$conn->close();
-
-
-
- ?>
- 
+  <center><h1>DeMoT (Detention Monitoring Tool)</h1>
+<br>
+<br>
+<br>
+<br>
+  <p><small>Detention Monitoring Tool este o aplicatie care ii ajuta pe utilizatori sa gestioneze vizitele dintr-un penitenciar sau dintr-o scoala de corectie. Aplicatia permite adaugarea unui condamnat (numele, prenumele, poza si motivul pedepsei) si adaugarea unei vizite la unul dintre acesti condamnati. Vizitele salveza informatii despre vizitatori (numele, prenumele si gradul de rudenie cu detinutul) cat si alte detalii, cum ar fi starea condamnatului la momentul vizitei, data vizitei, durata acesteia si alte informatii.</small></p>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  </center>
+  <h3>Echipa formata din:</h3>
+  <ul>
+  <li><h2>Stefanescu Cosmin - Andrei, I3B5</h2></li>
+  <li><h2>Dediu Vlad - Mihai, I3B5</h2></li>
+  <li><h2>Gaman Andrei, I2B7</h2></li>
+	</ul>
+ </div>
 </div>
+	
 </div>
-</center>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	
+	
+ 
+	
+<script src="https://ajax.s.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+
 </body>
+
 </html>
