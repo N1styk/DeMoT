@@ -19,7 +19,7 @@ if($result === FALSE) {
 
 while($row=mysql_fetch_array($result)) { 
 $response[$i]['Nume_condamnat']  = $row['nume_condamnat']; 
-
+$response[$i]['Prenume_condamnat']  = $row['prenume_condamnat'];
 	$id_condamnat=$row['id_condamnat'];
 	$result_vizite=mysql_query("SELECT * FROM Vizita WHERE Vizita.id_condamnat='$id_condamnat'") or die(mysql_error());
 	$j=0;
@@ -38,6 +38,4 @@ $fp = fopen('php://output', 'w');
 $json_string = json_encode($data);
 fclose($fp);
 echo $json_string;
-
-
 ?> 
