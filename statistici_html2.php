@@ -4,13 +4,14 @@ $username = "root";
 $password = "";
 $dbname = "demotdb";
 
-
+session_start();
+$ceva = $_SESSION['id_nou'];
 mysql_connect("localhost",$username,$password);
 mysql_select_db("demotdb") or die( "Unable to select database");
 
 $data = null;
 
-$result=mysql_query("SELECT condamnat.categoria_pedepsei,SUM(durata_vizitei) FROM vizita INNER JOIN condamnat ON condamnat.id_condamnat=vizita.id_condamnat GROUP BY condamnat.categoria_pedepsei");
+$result=mysql_query("SELECT ora_start, COUNT(ora_start) FROM vizita where id_condamnat='$ceva' Group by ora_start");
 
 $i=0;
 if($result === FALSE) { 
