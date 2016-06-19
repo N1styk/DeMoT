@@ -1,0 +1,10 @@
+.jumbotron {
+    position: relative;
+    background:black;
+	color:white;
+	background-attachment: fixed;
+	margin-top:0 px;
+	margin-bottom:8 px;
+	 min-height: 850px;
+	 min-width: 1100px;
+}
