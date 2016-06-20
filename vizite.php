@@ -1,18 +1,18 @@
 
 <?php
-//initialize the session
+
 if (!isset($_SESSION)) {
   session_start();
 }
 
-// ** Logout the current user. **
+
 $logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
 if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")){
   $logoutAction .="&". htmlentities($_SERVER['QUERY_STRING']);
 }
 
 if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
-  //to fully log out a visitor we need to clear the session varialbles
+
   $_SESSION['MM_Username'] = NULL;
   $_SESSION['MM_UserGroup'] = NULL;
   $_SESSION['PrevUrl'] = NULL;
@@ -34,22 +34,20 @@ if (!isset($_SESSION)) {
 $MM_authorizedUsers = "";
 $MM_donotCheckaccess = "true";
 
-// *** Restrict Access To Page: Grant or deny access to this page
+
 function isAuthorized($strUsers, $strGroups, $UserName, $UserGroup) { 
-  // For security, start by assuming the visitor is NOT authorized. 
+
   $isValid = False; 
 
-  // When a visitor has logged into this site, the Session variable MM_Username set equal to their username. 
-  // Therefore, we know that a user is NOT logged in if that Session variable is blank. 
+
   if (!empty($UserName)) { 
-    // Besides being logged in, you may restrict access to only certain users based on an ID established when they login. 
-    // Parse the strings into arrays. 
+
     $arrUsers = Explode(",", $strUsers); 
     $arrGroups = Explode(",", $strGroups); 
     if (in_array($UserName, $arrUsers)) { 
       $isValid = true; 
     } 
-    // Or, you may restrict access to only certain users based on their username. 
+
     if (in_array($UserGroup, $arrGroups)) { 
       $isValid = true; 
     } 
@@ -103,57 +101,56 @@ $con1=mysql_connect("localhost","root","");
 <!DOCTYPE HTML>  
 <html>
 <head>
-    <title>Proiect Tehnologii Web</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-</head>	
-<body>  
-
-
-
-<meta name="viewport" content="width = device-width, initial-scale = 1.0">
-	<link href = "css/bootstrap.min.css" rel= "stylesheet">
-	<link href = "css/styles.css" rel= "stylesheet">
+	<title>Proiect Tehnologii Web</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href = "css/stil2.css" rel= "stylesheet">
-    </head>
+	<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #e7e7e7;
+    background-color: #f3f3f3;
+}
 
-<!-- Tipul navbar-->
-<div class = "navbar navbar-inverse navbar-fixed-top">	
+li {
+    float: left;
+}
 
-	<!-- Ce va contine bara-->
-	<div class = "container">
-	
-	
-	  
-			<!-- Brandul-->
-			<div class = "navbar-brand"> DeMoT </div> 
-	
-		
-		
-		<ul class = "nav navbar-nav navbar-right">
-		
-			<li> <a href="index.php">Home</a></li>
-			<li> <a href = "#" class="dropdown-toggle" data-toggle="dropdown">Condamnati <span class="caret"></span></a>
-				<ul class="dropdown-menu" role="menu">
-				<li><a href="condamnatpg1.php">Adauga Condamnat</a></li>
-				<li><a href="condamnati.php">Lista Condamnati</a></li>                                          
-				</ul> </li>
-			<li><a href="statistici.php">Statistici</a></li>
-			
-		</ul>
-				
-	</div>	
+li a {
+    display: block;
+    color: #666;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
 
-</div>	
-	<br>
-	<br>
-	<br>
-	<br>
+li a:hover:not(.active) {
+    background-color: #ddd;
+}
 
-        
+li a.active {
+    color: white;
+    background-color: #008CBA;
+}
+</style>
+</head>
+<body class="w3-container"> 
+
+
+<ul>
+  <li><a href="index.php">Home</a></li>
+  <li><a class="active" href="condamnati.php">Condamnati</a></li>
+  <li><a href="condamnatpg1.php">Condamnat nou</a></li>
+  <li><a href="statistici.php">Statistici</a></li>
+    <li style="float:right"><a href="<?php echo $logoutAction ?>">Logout</a></li>
+</ul>
+
+<div class="jumbotron">
+        <center>
     <?php
 $var1 = $_SESSION['buton'];
 if($_SESSION['buton']==''){
@@ -228,12 +225,7 @@ WHERE condamnat.id_condamnat like '$var1'";
 			echo '</div>';
 			echo '</div>';
 			echo '<br>';
-			echo '<br>';
-			echo '<br>';
-			echo '<br>';
-			echo '<br>';
-			echo '<br>';
-			echo '<br>';
+
                 }
 }
                 mysql_close($con1);   
@@ -243,28 +235,27 @@ WHERE condamnat.id_condamnat like '$var1'";
 
 	
 <style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;margin:0px auto;}
-.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
-.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
-.tg .tg-4996{font-size:14px;text-align:right;vertical-align:top}
-.tg .tg-yw4l{vertical-align:top}
-th.tg-sort-header::-moz-selection { background:transparent; }th.tg-sort-header::selection      { background:transparent; }th.tg-sort-header { cursor:pointer; }table th.tg-sort-header:after {  content:'';  float:right;  margin-top:7px;  border-width:0 4px 4px;  border-style:solid;  border-color:#404040 transparent;  visibility:hidden;  }table th.tg-sort-header:hover:after {  visibility:visible;  }table th.tg-sort-desc:after,table th.tg-sort-asc:after,table th.tg-sort-asc:hover:after {  visibility:visible;  opacity:0.4;  }table th.tg-sort-desc:after {  border-bottom:none;  border-width:4px 4px 0;  }@media screen and (max-width: 767px) {.tg {width: auto !important;}.tg col {width: auto !important;}.tg-wrap {overflow-x: auto;-webkit-overflow-scrolling: touch;margin: auto 0px;}}</style>
+.tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #a9a9a9;border-collapse: collapse;}
+.tftable th {font-size:12px;background-color:#b8b8b8;border-width: 1px;padding: 8px;border-style: solid;border-color: #a9a9a9;text-align:left;}
+.tftable tr {background-color:#ffffff;}
+.tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #a9a9a9;}
+.tftable tr:hover {background-color:#ffff99;}
+</style>
+       
+<table class="tftable" border="1">
 
-  <div class="table-responsive">          
-	<table class="table table-striped table-hover">
-    <thead>
   <tr>
-    <th class="tg-031e">Nume vizitator</th>
-    <th class="tg-yw4l">Prenume vizitator</th>
-    <th class="tg-yw4l">Relatia cu condamnatul</th>
-    <th class="tg-yw4l">Data vizitei</th>
-    <th class="tg-yw4l">Durata vizite(ore)</th>
-    <th class="tg-yw4l">Durata vizite(minute)</th>
-    <th class="tg-yw4l">Timpul inceperii</th>
-    <th class="tg-yw4l">Timpul finalizarii</th>
-    <th class="tg-yw4l">Stare condamnat</th>
+    <th>Nume vizitator</th>
+    <th>Prenume vizitator</th>
+    <th>Relatia cu condamnatul</th>
+    <th>Data vizitei</th>
+    <th>Durata vizite(minute)</th>
+    <th>Durata vizite(ore)</th>
+    <th>Timpul inceperii</th>
+    <th>Timpul finalizarii</th>
+    <th>Stare condamnat</th>
   </tr>
-  </thead>
+
 
 <?php
 
@@ -283,22 +274,21 @@ WHERE condamnat.id_condamnat like '$var2'";
 
 				while($row = mysql_fetch_array($result))	
                 {
-					echo'<tbody>';
-					echo'<tr>';
-					echo '<th class="tg-031e">'.$row[0].'</th>';
-					echo '<th class="tg-031e">'.$row[1].'</th>';
-					echo '<th class="tg-031e">'.$row[2].'</th>';
-					echo '<th class="tg-031e">'.$row[3].'</th>';
-					echo '<th class="tg-031e">'.$row[4].'</th>';
-					echo '<th class="tg-031e">'.$row[5].'</th>';
-					echo '<th class="tg-031e">'.$row[6].'</th>';
-					echo '<th class="tg-031e">'.$row[7].'</th>';
-					echo '<th class="tg-031e">'.$row[8].'</th>';
 
+					echo'<tr>';
+					echo '<td>'.$row[0].'</td>';
+					echo '<td>'.$row[1].'</td>';
+					echo '<td>'.$row[2].'</td>';
+					echo '<td>'.$row[3].'</td>';
+					echo '<td>'.$row[4].'</td>';
+					echo '<td>'.$row[5].'</td>';
+					echo '<td>'.$row[6].'</td>';
+					echo '<td>'.$row[7].'</td>';
+					echo '<td>'.$row[8].'</td>';
 					echo'</tr>';
-					echo'</tbody>';
+
                 }
-				echo '</table></div>';}
+				echo '</table>';}
 else{
                 $con=mysql_connect("localhost","root","");
                 mysql_select_db("demotdb",$con);
@@ -310,33 +300,29 @@ inner join vizitator on vizita.id_vizitator=vizitator.id_vizitator
 WHERE condamnat.id_condamnat like '$var1'";
 
                 $result=mysql_query($qry,$con);
-				$numar=0;
+
 
 
 				while($row = mysql_fetch_array($result))	
                 {
-					echo'<tbody>';
-					echo'<tr>';
-					echo '<th class="tg-031e">'.$row[0].'</th>';
-					echo '<th class="tg-031e">'.$row[1].'</th>';
-					echo '<th class="tg-031e">'.$row[2].'</th>';
-					echo '<th class="tg-031e">'.$row[3].'</th>';
-					echo '<th class="tg-031e">'.$row[4].'</th>';
-					echo '<th class="tg-031e">'.$row[5].'</th>';
-					echo '<th class="tg-031e">'.$row[6].'</th>';
-					echo '<th class="tg-031e">'.$row[7].'</th>';
-					echo '<th class="tg-031e">'.$row[8].'</th>';
-
+				echo'<tr>';
+					echo '<td>'.$row[0].'</td>';
+					echo '<td>'.$row[1].'</td>';
+					echo '<td>'.$row[2].'</td>';
+					echo '<td>'.$row[3].'</td>';
+					echo '<td>'.$row[4].'</td>';
+					echo '<td>'.$row[5].'</td>';
+					echo '<td>'.$row[6].'</td>';
+					echo '<td>'.$row[7].'</td>';
+					echo '<td>'.$row[8].'</td>';
 					echo'</tr>';
-					echo'</tbody>';
                 }
-				echo '</table></div>';
-}		
+		echo '</table>';}
                 mysql_close($con);   
 
 ?>
 
-
-
+</div>
+</center>
 </body>
 </html>
