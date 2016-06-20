@@ -77,25 +77,51 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers,
 <head>
 	<title>Proiect Tehnologii Web</title>
 	<meta name="viewport" content="width = device-width, initial-scale = 1.0">
-	<link href = "css/bootstrap.min.css" rel= "stylesheet">
-	<link href = "css/styles.css" rel= "stylesheet">
 	<link href = "css/stil2.css" rel= "stylesheet">
+	
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #e7e7e7;
+    background-color: #f3f3f3;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: #666;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+li a.active {
+    color: white;
+    background-color: #008CBA;
+}
+</style>
 </head>
-<body>  
-	<div class = "navbar navbar-inverse navbar-fixed-top">	
-		<div class = "container">
-			<div class = "navbar-brand"> DeMoT </div> 
-				<ul class = "nav navbar-nav navbar-right">
-					<li> <a href="index.php">Home</a></li>
-					<li> <a href = "#" class="dropdown-toggle" data-toggle="dropdown">Condamnati <span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-						<li><a href="condamnatpg1.php">Adauga Condamnat</a></li>
-						<li><a href="condamnati.php">Lista Condamnati</a></li>                                          
-					</ul> </li>
-					<li><a href="statistici.php">Statistici</a></li>
-				</ul>
-		</div>	
-	</div>	
+<body class="w3-container">
+
+<ul>
+  <li><a href="index.php">Home</a></li>
+  <li><a class="active" href="condamnati.php">Condamnati</a></li>
+  <li><a href="condamnatpg1.php">Condamnat nou</a></li>
+  <li><a href="statistici.php">Statistici</a></li>
+    <li style="float:right"><a href="<?php echo $logoutAction ?>">Logout</a></li>
+</ul>
+
 <center>
 
 <?php
@@ -150,24 +176,37 @@ $con1=mysql_connect("localhost","root","");
 <?php
 
 if($_SESSION['MM_Username']=='guest' or $_SESSION['MM_Username']=='admin' ){
-	echo '<div class="row">';
+echo '<table align="left">';
+$numar = 0;
 	while($row = mysql_fetch_array($result)){
-		echo '<div class="col-xs-2 col-xs-2">';
-			echo '<div class="thumbnail">';
-			echo '<br>';
+if($numar == 5){
+echo '<tr>';
+$numar=0;
+
+}
+echo ' <td align="center">';
+				//echo $numar;
+			$numar=$numar+1;
 				echo '<img src="data:image;base64,'.$row[3].'" class="img-responsive"  style="width:200px;height:200px;">';
 					echo '<div class="caption">';
-						echo '<p> <small>'.$row[1].' '.$row[2].' </small></p>';
+						echo '<p>'.$row[1].' '.$row[2].'</p>';
 							echo '<label class="btn btn-default">';
-								echo '<input type="radio" class="btn btn-success" data-toggle="button" name="radio" value ="'.$row[0].'"/> Selecteaza';
+								echo '<input type="radio" class="button2" data-toggle="button" name="radio" value ="'.$row[0].'"/> Selecteaza';
 							echo '</label>';
 					echo '</div>';
-			echo '</div>';
-		echo '</div>';
+						echo '<br>';
+						echo '<br>';
+echo '</td>';
+if($numar==5){
+echo '</tr>';
+}
 	} 
-	echo '</div>';
-	
+
+echo '</table>';	
 	}
+	
+	
+	
 	else{
 	
 		
@@ -177,13 +216,9 @@ if($_SESSION['MM_Username']=='guest' or $_SESSION['MM_Username']=='admin' ){
 		echo '<div class="col-xs-2 col-xs-2">';
 			echo '<div class="thumbnail">';
 			echo '<br>';
-				echo '<img src="data:image;base64,'.$row2[3].'" class="img-responsive"  style="width:200px;height:200px;">';
-					echo '<div class="caption">';
+				echo '<img src="data:image;base64,'.$row2[3].'" class="img-responsive"  style="width:200px;height:200px;">';	
 						echo '<p> <small>'.$row2[1].' '.$row2[2].' </small></p>';
-							echo '<label class="btn btn-default">';
-								echo '<input type="radio" class="btn btn-success" data-toggle="button" name="radio" value ="'.$row[0].'"/> Selecteaza';
-							echo '</label>';
-					echo '</div>';
+								echo '<input type="radio" data-toggle="button" name="radio" value ="'.$row[0].'"/> Selecteaza';
 			echo '</div>';
 		echo '</div>';
 		//$_SESSION['id_cond'] = $id_cond;
@@ -192,9 +227,13 @@ if($_SESSION['MM_Username']=='guest' or $_SESSION['MM_Username']=='admin' ){
 	}
 ?>
 
-<input type="submit" name="submit" class="btn btn-primary btn-lg" value="Adauga Vizita"/> 
-<input type="submit" name="submit2" class="btn btn-primary btn-lg" value="Vezi Vizite"/>
-
+<?php if($_SESSION['MM_Username']=='guest'){?>
+<input type="submit" name="submit" class="button2" value="Adauga Vizita" disabled/> 
+<input type="submit" name="submit2" class="button2" value="Vezi Vizite" disabled/>
+<?php } else {?>
+<input type="submit" name="submit" class="button2" value="Adauga Vizita" /> 
+<input type="submit" name="submit2" class="button2" value="Vezi Vizite" />
+<?php } ?>
 </form>
 </div>
 </center>

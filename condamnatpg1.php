@@ -98,36 +98,59 @@ $id="";
 <html>
 <head>
     <title>Proiect Tehnologii Web</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link href = "css/stil2.css" rel= "stylesheet">
 	
-	<meta name="viewport" content="width = device-width, initial-scale = 1.0">
-	<link href = "css/bootstrap.min.css" rel= "stylesheet">
-	<link href = "css/styles.css" rel= "stylesheet">
-	<link href = "css/stil2.css" rel= "stylesheet">
-	
+<style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #e7e7e7;
+    background-color: #f3f3f3;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: #666;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+li a.active {
+    color: white;
+    background-color: #008CBA;
+}
+</style>
 </head>
-<body>
+<body class="w3-container">
 
 <?php
 
 
 if($id_util!=1){
 		?>
-		<div class = "navbar navbar-inverse navbar-static-top">	
-		<div class = "container">
-			<div class = "navbar-brand"> DeMoT </div> 
-				<ul class = "nav navbar-nav navbar-right">
-					<li> <a href="index.php">Home</a></li>
-					<li> <a href = "#" class="dropdown-toggle" data-toggle="dropdown">Condamnati <span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-						<li><a href="condamnatpg1.php">Adauga Condamnat</a></li>
-						<li><a href="condamnati.php">Lista Condamnati</a></li>                                          
-					</ul> </li>
-					<li><a href="statistici.php">Statistici</a></li>
-				</ul>
-		</div>	
-	</div>
+<ul>
+  <li><a href="index.php">Home</a></li>
+  <li><a href="condamnati.php">Condamnati</a></li>
+  <li><a class="active" href="condamnatpg1.php">Condamnat nou</a></li>
+  <li><a href="statistici.php">Statistici</a></li>
+    <li style="float:right"><a href="<?php echo $logoutAction ?>">Logout</a></li>
+</ul>
+
 	<center>	
-	<div class = "container">
+
 		<div class="jumbotron">
 		<br/>
 		<br/>
@@ -146,20 +169,14 @@ if($id_util!=1){
 else{
 	?>
 	
-		<div class = "navbar navbar-inverse navbar-static-top">	
-		<div class = "container">
-			<div class = "navbar-brand"> DeMoT </div> 
-				<ul class = "nav navbar-nav navbar-right">
-					<li> <a href="index.php">Home</a></li>
-					<li> <a href = "#" class="dropdown-toggle" data-toggle="dropdown">Condamnati <span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-						<li><a href="condamnatpg1.php">Adauga Condamnat</a></li>
-						<li><a href="condamnati.php">Lista Condamnati</a></li>                                          
-					</ul> </li>
-					<li><a href="statistici.php">Statistici</a></li>
-				</ul>
-		</div>	
-	</div>
+<ul>
+  <li><a href="index.php">Home</a></li>
+  <li><a href="condamnati.php">Condamnati</a></li>
+  <li><a class="active" href="condamnatpg1.php">Condamnat nou</a></li>
+  <li><a href="statistici.php">Statistici</a></li>
+  <li style="float:right"><a href="<?php echo $logoutAction ?>">Logout</a></li>
+</ul>
+
 <center>	
 	<div class = "container">
 		<div class="jumbotron">
@@ -167,13 +184,13 @@ else{
 			<img src="fb.jpg" class="img-thumbnail" style="width:400px;height:400px;">
 			<p>
 			<form method="post" enctype="multipart/form-data">
-				<label class="btn btn-default btn-file">Browse...
+				<label class="button2">Browse...
 					<input type="file" name = "image" style="display: none;">
 				</label>
 				<br/><br/>
 				<br/><br/>
 				<br/><br/>
-				<input type="submit" name="submit" value="Upload" class="btn btn-primary btn-lg" />
+				<input type="submit" name="submit" value="Upload" class="button2" />
 			</form>
 	
 	<?php
@@ -204,11 +221,8 @@ else{
 	}
 }
 ?>
-		</div>
-	</div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-    
+	</div>
+   
 </body>
 </html>

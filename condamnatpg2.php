@@ -91,13 +91,43 @@ $con1=mysql_connect("localhost","root","");
 <!DOCTYPE HTML>  
 <html>
 <head>
-    <title>Proiect Tehnologii Web</title>
-	<meta name="viewport" content="width = device-width, initial-scale = 1.0">
-	<link href = "css/bootstrap.min.css" rel= "stylesheet">
-	<link href = "css/styles.css" rel= "stylesheet">
+	<title>Proiect Tehnologii Web</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href = "css/stil2.css" rel= "stylesheet">
-</head>
-<body>  
+	<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #e7e7e7;
+    background-color: #f3f3f3;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: #666;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+li a.active {
+    color: white;
+    background-color: #008CBA;
+}
+</style>
+</head>	<body class="w3-container">   
 <?php
 // define variables and set to empty values
 $nume = $prenume = $categorie = "";
@@ -119,33 +149,15 @@ function test_input($data) {
 }
 ?>
 
+<ul>
+  <li><a href="index.php">Home</a></li>
+  <li><a href="condamnati.php">Condamnati</a></li>
+  <li><a class="active" href="condamnatpg1.php">Condamnat nou</a></li>
+  <li><a href="statistici.php">Statistici</a></li>
+    <li style="float:right"><a href="<?php echo $logoutAction ?>">Logout</a></li>
+</ul>
 
-<div class = "navbar navbar-inverse navbar-static-top">	
-
-	<!-- Ce va contine bara-->
-	<div class = "container">
-		
-			<!-- Brandul-->
-			<div class = "navbar-brand"> DeMoT </div> 
-		
-		<ul class = "nav navbar-nav navbar-right">
-		
-			<li> <a href="index.php">Home</a></li>
-			<li> <a href = "#" class="dropdown-toggle" data-toggle="dropdown">Condamnati <span class="caret"></span></a>
-				<ul class="dropdown-menu" role="menu">
-				<li><a href="condamnatpg1.php">Adauga Condamnat</a></li>
-				<li><a href="condamnati.php">Lista Condamnati</a></li>                                          
-				</ul> </li>
-			<li><a href="statistici.php">Statistici</a></li>
-
-			
-		</ul>
-				
-	</div>		
-		
-</div>
-<div class = "container">
-	<div class="jumbotron">
+<div class="jumbotron">
 <center>
 <?php
 
@@ -166,7 +178,58 @@ function test_input($data) {
 					}
              
 ?>
+<style>
+input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
 
+input[type=number], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=date], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    width: 100%;
+    background-color: #008CBA;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+div {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+</style>
 <br/>
 <br/>
 <br/>
@@ -175,23 +238,20 @@ function test_input($data) {
 <br/>
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">  
 
-<fieldset class="form-group">
-    <label for="exampleInputEmail1" class="col-sm-2 form-control-label">Nume</label>
-	<div class="col-sm-10">
-    <input type="text" class="form-control" name = "nume" placeholder="Numele condamnatului">
-	</div>
- </fieldset>
+
+    <label>Nume</label>
+
+    <input type="text" name = "nume" placeholder="Numele condamnatului">
+
  
- <fieldset class="form-group">
-    <label for="exampleInputEmail1" class="col-sm-2 form-control-label">Prenume</label>
-	<div class="col-sm-10">
-    <input type="text" class="form-control" name = "prenume" placeholder="Prenumele condamnatului">
-	</div>
- </fieldset>
-  <fieldset class="form-group">
-    <label for="exampleSelect1" class="col-sm-2 form-control-label">Categoria pedepsei</label>
-	<div class="col-sm-10">
-    <select class="form-control" name="categorie">
+
+    <label>Prenume</label>
+
+    <input type="text" name = "prenume" placeholder="Prenumele condamnatului">
+
+    <label>Categoria pedepsei</label>
+
+    <select  name="categorie">
      <option value="crima">Crima</option>
     <option value="furt">Furt</option>
     <option value="viol">Viol</option>
@@ -199,9 +259,12 @@ function test_input($data) {
     <option value="santaj">Santaj</option>
     <option value="rapire">Rapire</option>
     </select>
-	</div>
-  </fieldset>
-  <input type="submit"  onclick=" return buttonClickd();" name="submit"  class="btn btn-primary btn-lg" value="Submit">  
+
+<br/>
+<br/>
+<br/>
+<br/>
+  <input type="submit"  onclick=" return buttonClickd();" name="submit" value="Submit">  
 </form>
 
 
@@ -243,7 +306,5 @@ $conn->close();
 </div>
 </div>
 </center>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
 </body>
 </html>

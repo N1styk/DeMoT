@@ -49,7 +49,7 @@ function isAuthorized($strUsers, $strGroups, $UserName, $UserGroup) {
     if (in_array($UserName, $arrUsers)) { 
       $isValid = true; 
     } 
-    // Or, you may restrict access to  certain users based on their username. 
+    // Or, you may restrict access to only certain users based on their username. 
     if (in_array($UserGroup, $arrGroups)) { 
       $isValid = true; 
     } 
@@ -87,48 +87,63 @@ $con1=mysql_connect("localhost","root","");
 				
                 mysql_close($con1);   
 ?>
-<!DOCTYPE HTML> 
+<!DOCTYPE html>
 <html>
+
 <head>
     <title>Proiect Tehnologii Web</title>
-	<meta name="viewport" content="width = device-width, initial-scale = 1.0">
-	<link href = "css/bootstrap.min.css" rel= "stylesheet">
-	<link href = "css/styles.css" rel= "stylesheet">
-	<link href = "css/stil2.css" rel= "stylesheet">
-</head>
-<body>
-<!-- Tipul navbar-->
-<div class = "navbar navbar-inverse navbar-static-top">	
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link href = "css/stil2.css" rel= "stylesheet">
 
-	<!-- Ce va contine bara-->
-	<div class = "container">
-	
-	
-	  
-			
-			<!-- Brandul-->
-			<div class = "navbar-brand"> DeMoT </div> 
-	
-		
-		
-		<ul class = "nav navbar-nav navbar-right">
-		
-			<li class = "active"> <a href="index.php">Home</a></li>
-			<li> <a href = "#" class="dropdown-toggle" data-toggle="dropdown">Condamnati <span class="caret"></span></a>
-				<ul class="dropdown-menu" role="menu">
-				<li><a href="condamnatpg1.php">Adauga Condamnat</a></li>
-				<li><a href="condamnati.php">Lista Condamnati</a></li>                                          
-				</ul> </li>
-			<li><a href="statistici.php">Statistici</a></li>
-			<li><a href="<?php echo $logoutAction ?>">Logout</a></li>
-			
-		</ul>
-				
-	</div>		
-		
-</div>
-	<div class = "container">
-	<div class="jumbotron">
+<style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #e7e7e7;
+    background-color: #f3f3f3;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: #666;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+li a.active {
+    color: white;
+    background-color: #008CBA;
+}
+</style>
+</head>
+<body class="w3-container">
+<ul>
+  <li><a class="active" href="index.php">Home</a></li>
+  <li><a href="condamnati.php">Condamnati</a></li>
+  <li><a href="condamnatpg1.php">Condamnat nou</a></li>
+  <li><a href="statistici.php">Statistici</a></li>
+  <li style="float:right"><a href="<?php echo $logoutAction ?>">Logout</a></li>
+
+</ul>
+
+
+
+
+<center>
+<div class="jumbotron">
+<div id="box-container">
   <center><h1>DeMoT (Detention Monitoring Tool)</h1>
 <br>
 <br>
@@ -143,22 +158,15 @@ $con1=mysql_connect("localhost","root","");
   <br>
   </center>
   <h3>Echipa formata din:</h3>
-  <ul>
-  <li><h2>Stefanescu Cosmin - Andrei, I3B5</h2></li>
-  <li><h2>Dediu Vlad - Mihai, I3B5</h2></li>
-  <li><h2>Gaman Andrei, I2B7</h2></li>
-	</ul>
- </div>
-</div>
-	
-</div>
-	
-	
+  <h1>Stefanescu Cosmin - Andrei, I3B5</h1>
+  <h1>Dediu Vlad - Mihai, I3B5</h1>
+  <h1>Gaman Andrei, I2B7</h1>
  
-	
-<script src="https://ajax.s.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+ </div>
+ </div>
 
+
+</center>
 </body>
-
 </html>
+
