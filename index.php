@@ -34,7 +34,7 @@ if (!isset($_SESSION)) {
 $MM_authorizedUsers = "";
 $MM_donotCheckaccess = "true";
 
-// *** Restrict Access To Page: Grant or deny access to this page
+// *** Restrict Access Page: Grant or deny access to this page
 function isAuthorized($strUsers, $strGroups, $UserName, $UserGroup) { 
   // For security, start by assuming the visitor is NOT authorized. 
   $isValid = False; 
@@ -71,7 +71,6 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers,
   header("Location: ". $MM_restrictGoTo); 
   exit;
 }
-
 $ceva = $_SESSION['MM_Username'];
 $con1=mysql_connect("localhost","root","");
                 mysql_select_db("demotdb",$con1);
@@ -83,25 +82,20 @@ $con1=mysql_connect("localhost","root","");
 
 				while($row = mysql_fetch_array($result1))	
                 {
-			$id_util=$row[0];
+			//echo $row[0];
 				}
 				
                 mysql_close($con1);   
 ?>
-<!DOCTYPE HTML> 
-<?php
-    ini_set('mysql.connect_timeout',300);
-    ini_set('default_socket_timeout',300);
-$id="";
-
-?>
+<!DOCTYPE html>
 <html>
+
 <head>
     <title>Proiect Tehnologii Web</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 <link href = "css/stil2.css" rel= "stylesheet">
-	
+
 <style>
 ul {
     list-style-type: none;
@@ -135,94 +129,44 @@ li a.active {
 </style>
 </head>
 <body class="w3-container">
-
-<?php
-
-
-if($id_util!=1){
-		?>
 <ul>
-  <li><a href="index.php">Home</a></li>
+  <li><a class="active" href="index.php">Home</a></li>
   <li><a href="condamnati.php">Condamnati</a></li>
-  <li><a class="active" href="condamnatpg1.php">Condamnat nou</a></li>
-  <li><a href="statistici.php">Statistici</a></li>
-    <li style="float:right"><a href="<?php echo $logoutAction ?>">Logout</a></li>
-</ul>
-
-	<center>	
-
-		<div class="jumbotron">
-		<br/>
-		<br/>
-		<br/>
-		<br/>
-		<br/>
-		<br/>
-		<br/>
-		<br/>
-		<br/>
-		<br/>
-		<br/>
-			<h1 class="display-4">NU PUTETI ADAUGA CONDAMNATI</h1> <br>
-			<?php
-}
-else{
-	?>
-	
-<ul>
-  <li><a href="index.php">Home</a></li>
-  <li><a href="condamnati.php">Condamnati</a></li>
-  <li><a class="active" href="condamnatpg1.php">Condamnat nou</a></li>
+  <li><a href="condamnatpg1.php">Condamnat nou</a></li>
   <li><a href="statistici.php">Statistici</a></li>
   <li style="float:right"><a href="<?php echo $logoutAction ?>">Logout</a></li>
+
 </ul>
 
-<center>	
-	<div class = "container">
-		<div class="jumbotron">
-			<h1 class="display-4">Adauga Condamnat</h1> <br>
-			<img src="fb.jpg" class="img-thumbnail" style="width:400px;height:400px;">
-			<p>
-			<form method="post" enctype="multipart/form-data">
-				<label class="button2">Browse...
-					<input type="file" name = "image" style="display: none;">
-				</label>
-				<br/><br/>
-				<br/><br/>
-				<br/><br/>
-				<input type="submit" name="submit" value="Upload" class="button2" />
-			</form>
-	
-	<?php
-	if(isset($_POST['submit'])){
-		if(getimagesize($_FILES['image']['tmp_name']) == FALSE){
-			echo "Please select an image.";
-		}
-		else{
-			$image= addslashes($_FILES['image']['tmp_name']);
-			$image= file_get_contents($image);
-			$image= base64_encode($image);
-			$con=mysql_connect("localhost","root","");
-			mysql_select_db("demotdb",$con);
-			$id=uniqid();
-			$qry="insert into imagini (id_imagine,imagine) values ('$id','$image')";
-			$result=mysql_query($qry,$con);
-			if($result){
-				echo "<br/>Image uploaded.";
-			}
-			else{
-				echo "<br/>Image not uploaded.";
-			}
-		}
-	}
-	$_SESSION['favcolor'] = "$id";
-	if(isset($_POST['submit'])){
-	header("Location: condamnatpg2.php");
-	}
-}
-?>
 
-	</div>
-   
+
+
+<center>
+<div class="jumbotron">
+<div id="box-container">
+  <center><h1>DeMoT (Detention Monitoring Tool)</h1>
+<br>
+<br>
+<br>
+<br>
+  <p><small>Detention Monitoring Tool este o aplicatie care ii ajuta pe utilizatori sa gestioneze vizitele dintr-un penitenciar sau dintr-o scoala de corectie. Aplicatia permite adaugarea unui condamnat (numele, prenumele, poza si motivul pedepsei) si adaugarea unei vizite la unul dintre acesti condamnati. Vizitele salveza informatii despre vizitatori (numele, prenumele si gradul de rudenie cu detinutul) cat si alte detalii, cum ar fi starea condamnatului la momentul vizitei, data vizitei, durata acesteia si alte informatii.</small></p>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  </center>
+  <h3>Echipa formata din:</h3>
+  <h1>Stefanescu Cosmin - Andrei, I3B5</h1>
+  <h1>Dediu Vlad - Mihai, I3B5</h1>
+  <h1>Gaman Andrei, I2B7</h1>
+ 
+ </div>
+ </div>
+
+
+</center>
 </body>
 </html>
+

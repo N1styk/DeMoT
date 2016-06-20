@@ -86,7 +86,12 @@ $con1=mysql_connect("localhost","root","");
 				}
 				
                 mysql_close($con1);  
+<<<<<<< HEAD
 				
+=======
+
+//echo $altceva;				
+>>>>>>> 2bdb5233084f5026b4b5ad98118718983e11a638
 ?>
 
 <!DOCTYPE HTML>  
@@ -132,6 +137,31 @@ li a.active {
 </head>
 <body class="w3-container"> 
 
+<<<<<<< HEAD
+=======
+	<!-- Ce va contine bara-->
+	<div class = "container">
+		
+			<!-- Brandul-->
+			<div class = "navbar-brand"> DeMoT </div> 
+		
+		<ul class = "nav navbar-nav navbar-right">
+		
+			<li> <a href="index.php">Home</a></li>
+			<li> <a href = "#" class="dropdown-toggle" data-toggle="dropdown">Condamnati <span class="caret"></span></a>
+				<ul class="dropdown-menu" role="menu">
+				<li><a href="condamnatpg1.php">Adauga Condamnat</a></li>
+				<li><a href="condamnati.php">Lista Condamnati</a></li>                                          
+				</ul> </li>
+			<li><a href="statistici.php">Statistici</a></li>
+			
+		</ul>
+				
+	</div>		
+		
+</div>
+<!--MENIU-->
+>>>>>>> 2bdb5233084f5026b4b5ad98118718983e11a638
 
 <ul>
   <li><a href="index.php">Home</a></li>
@@ -258,6 +288,42 @@ div {
 
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">  
 
+<<<<<<< HEAD
+=======
+<h1 class="display-4">Detalii vizita</h1><br>
+<fieldset class="form-group">
+<label for="exampleSelect1" class="col-sm-2 form-control-label">Data vizitei</label>
+<div class="col-sm-10">
+<input type="date"  class="form-control" name="data" min="2016-06-06" max="2025-01-01" >
+</div>
+ </fieldset>
+ 
+ <fieldset class="form-group">
+ <label for="exampleSelect1" class="col-sm-2 form-control-label">Durata vizitei(numarul de ore)</label>
+<div class="col-sm-10">
+    <input type="number" class="form-control" value="0" name="durata_ora" min="0" max="23" >
+	</div>
+ </fieldset>
+
+ <fieldset class="form-group">
+ <label for="exampleSelect1" class="col-sm-2 form-control-label">Durata vizitei (numarul de minute)</label>
+<div class="col-sm-10">
+    <input type="number" class="form-control" value="0" name="durata_minute" min="0" max="59" >
+	</div>
+ </fieldset>
+ 
+ <fieldset class="form-group">
+    <label for="exampleInputEmail1" class="col-sm-2 form-control-label">Stare condamnat</label>
+	<div class="col-sm-10">
+    <input type="text" class="form-control" name = "stare" placeholder="Obiecte furnizate condamnatului">
+	</div>
+ </fieldset> 
+
+
+
+  <input type="submit"  onclick=" return buttonClickd();" class="btn btn-primary btn-lg" name="submit" value="Submit">  
+</form>
+>>>>>>> 2bdb5233084f5026b4b5ad98118718983e11a638
 
 
 <label >Data vizitei</label>
